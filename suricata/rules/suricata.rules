@@ -1,18 +1,97 @@
-                         
-# ICMP Recon
-alert icmp any any -> any any (msg:"ICMP reconnaissance detected"; sid:1000001; rev:1;)
+# =========================================================
 
-# SSH Attempt
-alert tcp any any -> any 22 (msg:"SSH connection attempt detected"; flags:S; flow:stateless; si>
+# ATTACK DETECTED - NMAP PORT SCAN
 
-# HTTP Traffic
-alert tcp any any -> any 80 (msg:"HTTP traffic detected"; flow:to_server,established; sid:10000>
+# =========================================================
 
-# SYN Scan Detection
-alert tcp any any -> any any (msg:"Possible SYN scan detected"; flags:S; flow:stateless; detect>
+alert tcp any any -> any any 
+(msg:"ATTACK DETECTED - NMAP Port Scan"; 
+flags:S; 
+threshold:type both, track by_src, count 20, seconds 5; 
+sid:1000001; rev:2;)
 
-# SSH Brute Force Pattern
-alert tcp any any -> any 22 (msg:"Possible SSH brute force detected"; flags:S; detection_filter>
+# =========================================================
+
+# ATTACK DETECTED - SSH BRUTE FORCE (HYDRA)
+
+# =========================================================
+
+alert tcp any any -> any 22 
+(msg:"ATTACK DETECTED - SSH Brute Force"; 
+threshold:type both, track by_src, count 5, seconds 60; 
+sid:1000002; rev:2;)
+
+# =========================================================
+
+# ATTACK DETECTED - SQLMAP USER AGENT
+
+# =========================================================
+
+alert http any any -> any any 
+(msg:"ATTACK DETECTED - SQLMap"; 
+content:"sqlmap"; 
+nocase; 
+sid:1000003; rev:2;)
+
+# =========================================================
+
+# ATTACK DETECTED - SQL INJECTION UNION SELECT
+
+# =========================================================
+
+alert http any any -> any any 
+(msg:"ATTACK DETECTED - SQL Injection"; 
+content:"UNION"; 
+nocase; 
+sid:1000004; rev:2;)
+
+# =========================================================
+
+# ATTACK DETECTED - SQL INJECTION OR 1=1
+
+# =========================================================
+
+alert http any any -> any any 
+(msg:"ATTACK DETECTED - SQL Injection"; 
+content:"OR 1=1"; 
+nocase; 
+sid:1000005; rev:2;)
+
+# =========================================================
+
+# ATTACK DETECTED - SQL INJECTION SELECT
+
+# =========================================================
+
+alert http any any -> any any 
+(msg:"ATTACK DETECTED - SQL Injection"; 
+content:"SELECT"; 
+nocase; 
+sid:1000006; rev:2;)
+
+# =========================================================
+
+# ATTACK DETECTED - HTTP Login Brute Force
+
+# =========================================================
+
+alert http any any -> any any 
+(msg:"ATTACK DETECTED - Multiple Login Attempts"; 
+content:"username"; 
+nocase; 
+threshold:type both, track by_src, count 5, seconds 60; 
+sid:1000007; rev:2;)
+
+# =========================================================
+
+# ATTACK DETECTED - ICMP Ping Sweep
+
+# =========================================================
+
+alert icmp any any -> any any 
+(msg:"ATTACK DETECTED - ICMP Ping"; 
+sid:1000008; rev:1;)
+
 
 
 
